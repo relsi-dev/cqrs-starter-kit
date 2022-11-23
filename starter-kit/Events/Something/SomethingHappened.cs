@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Events.Something;
 
-namespace Events.Something
+public class SomethingHappened
 {
-    public class SomethingHappened
-    {
-        public Guid Id;
-        public string What;
-    }
+    public Guid Id;
+    public string What;
 }

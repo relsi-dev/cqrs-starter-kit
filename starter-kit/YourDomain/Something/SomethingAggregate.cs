@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace YourDomain.Something;
+
 using Edument.CQRS;
 using Events.Something;
 using System.Collections;
 
-namespace YourDomain.Something
+public class SomethingAggregate : Aggregate,
+    IHandleCommand<MakeSomethingHappen>,
+    IApplyEvent<SomethingHappened>
 {
-    public class SomethingAggregate : Aggregate,
-        IHandleCommand<MakeSomethingHappen>,
-        IApplyEvent<SomethingHappened>
+    private bool alreadyHappened;
+
+    public IEnumerable Handle(MakeSomethingHappen c)
     {
-        private bool alreadyHappened;
+        if (alreadyHappened)
+            throw new SomethingCanOnlyHappenOnce();
 
-        public IEnumerable Handle(MakeSomethingHappen c)
+        yield return new SomethingHappened
         {
-            if (alreadyHappened)
-                throw new SomethingCanOnlyHappenOnce();
+            Id = c.Id,
+            What = c.What
+        };
+    }
 
-            yield return new SomethingHappened
-            {
-                Id = c.Id,
-                What = c.What
-            };
-        }
-
-        public void Apply(SomethingHappened e)
-        {
-            alreadyHappened = true;
-        }
+    public void Apply(SomethingHappened e)
+    {
+        alreadyHappened = true;
     }
 }
